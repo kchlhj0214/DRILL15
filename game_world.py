@@ -48,17 +48,19 @@ def render():
 def clear():
     for layer in world:
         layer.clear()
+    collision_pairs.clear()
 
-#충돌 페어로 등록된 오브젝트들에 대해 충돌을 검사하고,
-#충돌시 콜벡 함수를 호출.
-
+# 충돌 목록의 복사본을 순회하고, 제거된 물체는 실제 목록에서 확인한다.
 def handle_collision():
     for group, pairs in collision_pairs.items():
-        for a in pairs[0]:
-            for b in pairs[1]:
-                if collide(a, b):
-                    a.handle_collision(group, b)
-                    b.handle_collision(group, a)
+        for a in pairs[0][:]:
+            for b in pairs[1][:]:
+                if a not in pairs[0]:
+                    break
+                if b not in pairs[1] or not collide(a, b):
+                    continue
+                a.handle_collision(group, b)
+                b.handle_collision(group, a)
 
 def remove_collision_object(o):
     for pairs in collision_pairs.values():
