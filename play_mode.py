@@ -62,7 +62,7 @@ def finish():
 
 def update():
     game_world.update()
-    game_world.handle_collision()
+    game_world.handle_collision(lambda: not game_framework.running)
 
 
 def render():

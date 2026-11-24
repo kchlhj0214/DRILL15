@@ -51,7 +51,7 @@ def clear():
     collision_pairs.clear()
 
 # 충돌 목록의 복사본을 순회하고, 제거된 물체는 실제 목록에서 확인한다.
-def handle_collision():
+def handle_collision(should_stop=None):
     for group, pairs in collision_pairs.items():
         for a in pairs[0][:]:
             for b in pairs[1][:]:
@@ -61,6 +61,8 @@ def handle_collision():
                     continue
                 a.handle_collision(group, b)
                 b.handle_collision(group, a)
+                if should_stop is not None and should_stop():
+                    return
 
 def remove_collision_object(o):
     for pairs in collision_pairs.values():
