@@ -25,7 +25,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 # 초당 프레임 수 = (초속 / 보폭) * 보폭당 프레임 수 = 약 12.15
 STRIDE_LENGTH_M = 1.5  # 보폭 길이
 RUN_FRAMES_PER_STRIDE = 5 # 1개 보폭에 대한 애니메이션 프레임 수
-RUN_FRAMES_PER_SECOND = RUN_SPEED_MPS / STRIDE_LENGTH_M * RUN_FRAMES_PER_STRIDE # 프레임 증가 속도, 즉 1초당 몇개 프레임을 증가시켜야 하는가? 
+RUN_FRAMES_PER_SECOND = RUN_SPEED_MPS / STRIDE_LENGTH_M * RUN_FRAMES_PER_STRIDE # 프레임 증가 속도, 즉 1초당 몇개 프레임을 증가시켜야 하는가?
 
 
 
@@ -144,6 +144,7 @@ class Boy:
         ball = Ball(self.x + self.face_dir * 40, self.y + 60, self.face_dir,
                     1 if self.item == 'Ball' else 2)
         game_world.add_oject(ball)
+        game_world.add_collision_pair('ball:zombie', ball, None)
 
     def pause(self):
         self.pressed_keys.clear()
@@ -193,4 +194,3 @@ class Boy:
         if group == "boy:ball":
             #소년이 공과 충돌했을때의 처리
             self.ball_count += 1
-

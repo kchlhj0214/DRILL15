@@ -19,6 +19,7 @@ FRAMES_PER_ACTION = 10
 
 MIN_X, MAX_X = 800, 1600  # 좀비가 오가는 구간
 START_SIZE = 200
+HIT_SIZE = 100
 FEET_Y = 50
 
 
@@ -63,3 +64,7 @@ class Zombie:
     def get_bb(self):
         half_size = self.size / 2
         return self.x - half_size, FEET_Y, self.x + half_size, FEET_Y + self.size
+
+    def handle_collision(self, group, other):
+        if group == 'ball:zombie':
+            self.size = HIT_SIZE

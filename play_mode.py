@@ -1,20 +1,19 @@
+import random
+
 from pico2d import *
-import game_world
+
 import game_framework
+import game_world
+from ball import Ball
 from boy import Boy
 from grass import Grass
-from ball import Ball
 from zombie import Zombie
-import random
 
 boy = None
 
 
 def handle_events():
-
-
-    event_list = get_events()
-    for event in event_list:
+    for event in get_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
             return
@@ -27,28 +26,22 @@ def handle_events():
 def init():
     global boy
     boy = Boy()
-   
-
-    global grass
     grass = Grass()
-    
-
-    global balls 
-    balls = [Ball(random.randint(100, 1700), 60, 0) for i in range(30)]
-    
+    balls = [Ball(random.randint(100, 1700), 60, 0) for _ in range(30)]
+    zombies = [Zombie()]
+    zombies.extend(Zombie() for _ in range(3))
 
     game_world.add_oject(boy)
     game_world.add_oject(grass, 0)
     game_world.add_objects(balls, 1)
+    game_world.add_objects(zombies, 1)
 
-    #소년과 볼 사이의 충돌 페어를 등록
+    for zombie in zombies:
+        game_world.add_collision_pair('ball:zombie', None, zombie)
+
     game_world.add_collision_pair('boy:ball', boy, None)
-
     for ball in balls:
         game_world.add_collision_pair('boy:ball', None, ball)
-
-    zombies = [Zombie() for i in range(4)]
-    game_world.add_objects(zombies, 1)
 
 
 def pause():
@@ -67,13 +60,10 @@ def finish():
 
 def update():
     game_world.update()
-    
-    #볼과 소년의 충돌 검사
     game_world.handle_collision()
-    
+
 
 def render():
     clear_canvas()
     game_world.render()
     update_canvas()
-

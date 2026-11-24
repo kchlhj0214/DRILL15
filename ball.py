@@ -44,7 +44,5 @@ class Ball:
                 self.x + self.radius, self.y + self.radius)
 
     def handle_collision(self, group, other):
-            #충돌 그룹 이름이 "boy:ball"이면, 소년이 공과 충돌한 경우이다.
-            if group == "boy:ball":
-                #소년이 공과 충돌했을때의 처리
-                game_world.remove_object(self)
+        if group in ('boy:ball', 'ball:zombie'):
+            game_world.remove_object(self)
