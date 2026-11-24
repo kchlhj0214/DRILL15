@@ -40,8 +40,9 @@ class Ball:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x -10, self.y -10, self.x + 10, self.y + 10
-    
+        return (self.x - self.radius, self.y - self.radius,
+                self.x + self.radius, self.y + self.radius)
+
     def handle_collision(self, group, other):
             #충돌 그룹 이름이 "boy:ball"이면, 소년이 공과 충돌한 경우이다.
             if group == "boy:ball":

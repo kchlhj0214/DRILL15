@@ -38,21 +38,24 @@ class CollisionTest(unittest.TestCase):
         boy = boy_class.__new__(boy_class)
         boy.x, boy.y, boy.ball_count = 400, 90, 10
         boy.update = Mock()
+        zombie = Mock(get_bb=Mock(return_value=(900, 50, 1100, 250)))
         with patch.dict(sys.modules, pico2d=SimpleNamespace(),
                         game_framework=Mock(),
                         boy=SimpleNamespace(Boy=Mock(return_value=boy)),
                         ball=SimpleNamespace(Ball=ball_class),
                         grass=SimpleNamespace(Grass=Mock()),
-                        zombie=SimpleNamespace(Zombie=Mock())):
+                        zombie=SimpleNamespace(Zombie=Mock(return_value=zombie))):
             play = runpy.run_path(str(Path(__file__).with_name('play_mode.py')))
         with patch.object(game_world, 'world', [[], [], []]), \
                 patch.object(game_world, 'collision_pairs', {}):
             play['init']()
-            self.assertEqual(len(game_world.world[1]), 31)
-            for ball in game_world.world[1][1:]:
+            ground_balls = game_world.collision_pairs['boy:ball'][1][:]
+            self.assertEqual(len(ground_balls), 30)
+            self.assertEqual(game_world.world[1], [boy, *ground_balls, zombie])
+            for ball in ground_balls:
                 ball.x, ball.y = 400, 60
             play['update']()
-            self.assertEqual(game_world.world[1], [boy])
+            self.assertEqual(game_world.world[1], [boy, zombie])
             self.assertEqual(boy.ball_count, 40)
             play['update']()
             self.assertEqual(boy.ball_count, 40)
