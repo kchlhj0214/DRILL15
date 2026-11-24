@@ -36,6 +36,7 @@ class Zombie:
         self.load_images()
         self.x = random.randint(MIN_X, MAX_X)
         self.size = START_SIZE
+        self.hits = 0
         self.frame = random.randint(0, 9)
         self.dir = random.choice([-1, 1])
 
@@ -66,5 +67,10 @@ class Zombie:
         return self.x - half_size, FEET_Y, self.x + half_size, FEET_Y + self.size
 
     def handle_collision(self, group, other):
-        if group == 'ball:zombie':
+        if group != 'ball:zombie':
+            return
+        self.hits += 1
+        if self.hits == 1:
             self.size = HIT_SIZE
+        else:
+            game_world.remove_object(self)
